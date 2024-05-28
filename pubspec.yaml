@@ -1,0 +1,11 @@
+name: palmeres
+description: A simple CLI to randomly allocate bookings
+version: 0.1.0
+repository: https://github.com/albertms10/palmeres
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dev_dependencies:
+  test: ^1.25.5
+  very_good_analysis: ^5.1.0
