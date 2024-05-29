@@ -59,19 +59,6 @@ extension People on Set<String> {
   }
 }
 
-extension<K> on Map<K, List<DateTime>> {
-  void prettyPrint({String label = ''}) {
-    print('== $label ===============');
-    for (final entry in entries) {
-      print(
-        '${entry.key}: '
-        '${entry.value.map(_dM.format).join(', ')}',
-      );
-    }
-    print('== $label ===============');
-  }
-}
-
 extension on Map<DateTime, ({String label, String person})> {
   List<(DateTime, String, String)> get recordEntries => [
         for (final entry in entries)
