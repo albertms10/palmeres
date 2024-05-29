@@ -15,7 +15,7 @@ extension People on Set<String> {
   ///
   /// Optionally, [seed] can be provided to initialize the internal state of the
   /// random generator.
-  List<(DateTime, String, String)> allocateWeeks({
+  List<(DateTime date, String label, String person)> allocateWeeks({
     required DateTime from,
     int weeksPerPerson = 1,
     List<String> labels = const [''],
@@ -31,9 +31,9 @@ extension People on Set<String> {
         ..._allocateWeeks(
           people: sortedPeople,
           from: from,
+          label: labels[i],
           weeksPerPerson: weeksPerPerson,
           indexShift: length ~/ (i + 1),
-          label: labels[i],
         ).recordEntries,
     ];
   }
@@ -42,8 +42,8 @@ extension People on Set<String> {
     required List<String> people,
     required DateTime from,
     required String label,
-    int indexShift = 0,
     int weeksPerPerson = 1,
+    int indexShift = 0,
   }) {
     final totalWeeks = weeksPerPerson * length;
     final schedule = <DateTime, ({String label, String person})>{};
@@ -55,7 +55,7 @@ extension People on Set<String> {
       runDate = runDate.add(const Duration(days: 7));
     }
 
-    return schedule..prettyPrint(label: label);
+    return schedule..prettyPrint();
   }
 }
 
@@ -65,7 +65,8 @@ extension on Map<DateTime, ({String label, String person})> {
           (entry.key, entry.value.label, entry.value.person),
       ];
 
-  void prettyPrint({String label = ''}) {
+  void prettyPrint() {
+    final label = entries.first.value.label;
     print('== $label ===============');
     for (final entry in entries) {
       print('${_dM.format(entry.key)}: ${entry.value.person}');
