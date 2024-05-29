@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:collection' show SplayTreeMap;
+import 'dart:io' show File;
 import 'dart:math' show Random;
 
 import 'package:intl/intl.dart' show DateFormat;
@@ -33,9 +34,9 @@ extension DateDistribution on Set<String> {
       runDate = runDate.add(const Duration(days: 7));
     }
 
-    return schedule
-      ..prettyPrint()
-      ..flat().prettyPrint();
+    schedule.flat().writeCSV();
+
+    return schedule..prettyPrint();
   }
 }
 
@@ -58,6 +59,21 @@ extension<K> on Map<K, List<DateTime>> {
 }
 
 extension<V> on Map<DateTime, V> {
+  /// Writes this [Map] in a CSV file, optionally providing [fileName].
+  void writeCSV({String fileName = 'schedule.csv'}) {
+    final content = StringBuffer()
+      ..writeAll(
+        [
+          'Date,Person',
+          for (final entry in entries)
+            '${_yMd.format(entry.key)},${entry.value}',
+        ],
+        '\n',
+      );
+
+    File('out/$fileName').writeAsStringSync(content.toString());
+  }
+
   void prettyPrint() {
     print('====================');
     for (final entry in entries) {
