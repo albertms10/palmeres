@@ -1,12 +1,10 @@
-// ignore_for_file: avoid_print, no_adjacent_strings_in_list
+// ignore_for_file: avoid_print
 
-import 'dart:io' show File;
 import 'dart:math' show Random;
 
 import 'package:intl/intl.dart' show DateFormat;
 
 final _dM = DateFormat('d/M');
-final _yMd = DateFormat('yyyy-MM-dd');
 
 /// A people extension.
 extension People on Set<String> {
@@ -72,25 +70,5 @@ extension on Map<DateTime, ({String label, String person})> {
       print('${_dM.format(entry.key)}: ${entry.value.person}');
     }
     print('== $label ===============');
-  }
-}
-
-/// An allocations extension.
-extension Allocations on List<(DateTime, String, String)> {
-  /// Writes this [Map] in a CSV file with [fileName].
-  void writeCSV({required String fileName}) {
-    final content = StringBuffer()
-      ..writeAll(
-        [
-          'Date,Label,Person',
-          for (final item in this)
-            '${_yMd.format(item.$1)},'
-                '${item.$2},'
-                '${item.$3}',
-        ],
-        '\n',
-      );
-
-    File('out/$fileName').writeAsStringSync(content.toString());
   }
 }
