@@ -1,4 +1,4 @@
-import 'package:palmeres/palmeres.dart';
+import 'package:palmeres/people.dart';
 
 void main(List<String> arguments) {
   final [startDate, labels, weeksPerPerson, people] = arguments;
