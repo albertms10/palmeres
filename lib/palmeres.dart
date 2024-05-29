@@ -1,6 +1,5 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, no_adjacent_strings_in_list
 
-import 'dart:collection' show SplayTreeMap;
 import 'dart:io' show File;
 import 'dart:math' show Random;
 
@@ -16,69 +15,93 @@ extension DateDistribution on Set<String> {
   ///
   /// Optionally, [seed] can be provided to initialize the internal state of the
   /// random generator.
-  Map<String, List<DateTime>> allocateWeeks({
+  void allocateWeeks({
     required DateTime from,
     int weeksPerPerson = 1,
+    List<String> labels = const [''],
     int seed = 0,
   }) {
+    assert(labels.isNotEmpty, 'Labels must contain at least one item');
+
     final random = Random(seed * 1000 + from.year);
     final sortedPeople = toList()..shuffle(random);
+
+    [
+      for (var i = 0; i < labels.length; i++)
+        ..._allocateWeeks(
+          people: sortedPeople,
+          from: from,
+          weeksPerPerson: weeksPerPerson,
+          indexShift: length ~/ (i + 1),
+          label: labels[i],
+        ).recordEntries,
+    ].writeCSV(fileName: 'schedule.csv');
+  }
+
+  Map<DateTime, ({String label, String person})> _allocateWeeks({
+    required List<String> people,
+    required DateTime from,
+    required String label,
+    int indexShift = 0,
+    int weeksPerPerson = 1,
+  }) {
     final totalWeeks = weeksPerPerson * length;
-    final schedule = <String, List<DateTime>>{};
+    final schedule = <DateTime, ({String label, String person})>{};
 
     var runDate = from;
     for (var i = 0; i < totalWeeks; i++) {
-      final person = sortedPeople[i % length];
-      if (schedule[person] == null) schedule[person] = [];
-      schedule[person]!.add(runDate);
+      final person = people[(i + indexShift) % length];
+      schedule[runDate] = (label: label, person: person);
       runDate = runDate.add(const Duration(days: 7));
     }
 
-    schedule.flat().writeCSV();
-
-    return schedule..prettyPrint();
+    return schedule..prettyPrint(label: label);
   }
 }
 
 extension<K> on Map<K, List<DateTime>> {
-  Map<DateTime, K> flat() => SplayTreeMap.of({
-        for (final entry in entries)
-          for (final date in entry.value) date: entry.key,
-      });
-
-  void prettyPrint() {
-    print('====================');
+  void prettyPrint({String label = ''}) {
+    print('== $label ===============');
     for (final entry in entries) {
       print(
         '${entry.key}: '
         '${entry.value.map(_dM.format).join(', ')}',
       );
     }
-    print('====================');
+    print('== $label ===============');
   }
 }
 
-extension<V> on Map<DateTime, V> {
-  /// Writes this [Map] in a CSV file, optionally providing [fileName].
-  void writeCSV({String fileName = 'schedule.csv'}) {
+extension on Map<DateTime, ({String label, String person})> {
+  List<(DateTime, String, String)> get recordEntries => [
+        for (final entry in entries)
+          (entry.key, entry.value.label, entry.value.person),
+      ];
+
+  void prettyPrint({String label = ''}) {
+    print('== $label ===============');
+    for (final entry in entries) {
+      print('${_dM.format(entry.key)}: ${entry.value.person}');
+    }
+    print('== $label ===============');
+  }
+}
+
+extension on List<(DateTime, String, String)> {
+  /// Writes this [Map] in a CSV file with [fileName].
+  void writeCSV({required String fileName}) {
     final content = StringBuffer()
       ..writeAll(
         [
-          'Date,Person',
-          for (final entry in entries)
-            '${_yMd.format(entry.key)},${entry.value}',
+          'Date,Label,Person',
+          for (final item in this)
+            '${_yMd.format(item.$1)},'
+                '${item.$2},'
+                '${item.$3}',
         ],
         '\n',
       );
 
     File('out/$fileName').writeAsStringSync(content.toString());
-  }
-
-  void prettyPrint() {
-    print('====================');
-    for (final entry in entries) {
-      print('${_dM.format(entry.key)}: ${entry.value}');
-    }
-    print('====================');
   }
 }
