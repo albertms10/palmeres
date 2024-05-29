@@ -3,10 +3,11 @@ import 'package:intl/intl.dart' show DateFormat;
 final _yMd = DateFormat('yyyy-MM-dd');
 
 /// An allocations extension.
-extension Allocations on List<(DateTime date, String label, String person)> {
+extension Allocations
+    on List<(DateTime date, String apartment, String person)> {
   /// This record list formatted as TSV (tab-separated values).
   String toTSV({
-    (String, String, String) header = const ('Date', 'Label', 'Person'),
+    (String, String, String) header = const ('Date', 'Apartment', 'Person'),
   }) =>
       (StringBuffer()
             ..writeAll(

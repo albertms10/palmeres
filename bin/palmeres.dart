@@ -4,13 +4,13 @@ import 'package:palmeres/allocations.dart';
 import 'package:palmeres/people.dart';
 
 Future<void> main(List<String> arguments) async {
-  final [startDate, weeksPerPerson, labels, people] = arguments;
+  final [from, weeksPerPerson, apartments, people] = arguments;
 
   final peopleSet = people.trimSplit(',').toSet();
   final schedule = peopleSet.allocateWeeks(
-    from: DateTime.parse(startDate),
+    from: DateTime.parse(from),
     weeksPerPerson: int.parse(weeksPerPerson),
-    labels: labels.trimSplit(',').toList(),
+    apartments: apartments.trimSplit(',').toList(),
     seed: 19,
   );
 

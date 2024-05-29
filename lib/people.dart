@@ -9,47 +9,47 @@ final _dM = DateFormat('d/M');
 /// A people extension.
 extension People on Set<String> {
   /// Allocates each item in this [Set] in weeks starting [from] a date
-  /// given the number of [weeksPerPerson].
+  /// given the number of [weeksPerPerson] and a list of [apartments].
   ///
   /// Optionally, [seed] can be provided to initialize the internal state of the
   /// random generator.
-  List<(DateTime date, String label, String person)> allocateWeeks({
+  List<(DateTime date, String apartment, String person)> allocateWeeks({
     required DateTime from,
     int weeksPerPerson = 1,
-    List<String> labels = const [''],
+    List<String> apartments = const [''],
     int seed = 0,
   }) {
-    assert(labels.isNotEmpty, 'Labels must contain at least one item');
+    assert(apartments.isNotEmpty, 'Apartments must contain at least one item');
 
     final random = Random(seed * 1000 + from.year);
     final sortedPeople = toList()..shuffle(random);
 
     return [
-      for (var i = 0; i < labels.length; i++)
+      for (var i = 0; i < apartments.length; i++)
         ..._allocateWeeks(
           people: sortedPeople,
           from: from,
-          label: labels[i],
+          apartment: apartments[i],
           weeksPerPerson: weeksPerPerson,
           indexShift: length ~/ (i + 1),
         ).recordEntries,
     ];
   }
 
-  Map<DateTime, ({String label, String person})> _allocateWeeks({
+  Map<DateTime, ({String apartment, String person})> _allocateWeeks({
     required List<String> people,
     required DateTime from,
-    required String label,
+    required String apartment,
     int weeksPerPerson = 1,
     int indexShift = 0,
   }) {
     final totalWeeks = weeksPerPerson * length;
-    final schedule = <DateTime, ({String label, String person})>{};
+    final schedule = <DateTime, ({String apartment, String person})>{};
 
     var runDate = from;
     for (var i = 0; i < totalWeeks; i++) {
       final person = people[(i + indexShift) % length];
-      schedule[runDate] = (label: label, person: person);
+      schedule[runDate] = (apartment: apartment, person: person);
       runDate = runDate.add(const Duration(days: 7));
     }
 
@@ -57,18 +57,18 @@ extension People on Set<String> {
   }
 }
 
-extension on Map<DateTime, ({String label, String person})> {
+extension on Map<DateTime, ({String apartment, String person})> {
   List<(DateTime, String, String)> get recordEntries => [
         for (final entry in entries)
-          (entry.key, entry.value.label, entry.value.person),
+          (entry.key, entry.value.apartment, entry.value.person),
       ];
 
   void prettyPrint() {
-    final label = entries.first.value.label;
-    print('== $label ===============');
+    final apartment = entries.first.value.apartment;
+    print('== $apartment ===============');
     for (final entry in entries) {
       print('${_dM.format(entry.key)}: ${entry.value.person}');
     }
-    print('== $label ===============');
+    print('== $apartment ===============');
   }
 }

@@ -8,7 +8,7 @@ void main() {
         final schedule = const {'A', 'B', 'C', 'D', 'E', 'F'}.allocateWeeks(
           from: DateTime(2024, 6, 3),
           weeksPerPerson: 2,
-          labels: ['🌴', '🏡'],
+          apartments: ['🌴', '🏡'],
         );
 
         expect(schedule, [

@@ -33,7 +33,7 @@ void main() {
         ];
 
         expect(schedule.toTSV(), '''
-Date\tLabel\tPerson
+Date\tApartment\tPerson
 2024-06-03\t🌴\tF
 2024-06-10\t🌴\tC
 2024-06-17\t🌴\tB
