@@ -3,6 +3,11 @@
 import 'dart:collection' show SplayTreeMap;
 import 'dart:math' show Random;
 
+import 'package:intl/intl.dart' show DateFormat;
+
+final _dM = DateFormat('d/M');
+final _yMd = DateFormat('yyyy-MM-dd');
+
 /// A Date distribution extension.
 extension DateDistribution on Set<String> {
   /// Allocates each item in this [Set] in weeks starting [from] a date
@@ -45,7 +50,7 @@ extension<K> on Map<K, List<DateTime>> {
     for (final entry in entries) {
       print(
         '${entry.key}: '
-        '${entry.value.map((date) => '${date.day}/${date.month}').join(', ')}',
+        '${entry.value.map(_dM.format).join(', ')}',
       );
     }
     print('====================');
@@ -56,7 +61,7 @@ extension<V> on Map<DateTime, V> {
   void prettyPrint() {
     print('====================');
     for (final entry in entries) {
-      print('${entry.key.day}/${entry.key.month}: ${entry.value}');
+      print('${_dM.format(entry.key)}: ${entry.value}');
     }
     print('====================');
   }
