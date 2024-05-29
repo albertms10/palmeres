@@ -8,14 +8,14 @@ import 'package:intl/intl.dart' show DateFormat;
 final _dM = DateFormat('d/M');
 final _yMd = DateFormat('yyyy-MM-dd');
 
-/// A Date distribution extension.
-extension DateDistribution on Set<String> {
+/// A people extension.
+extension People on Set<String> {
   /// Allocates each item in this [Set] in weeks starting [from] a date
   /// given the number of [weeksPerPerson].
   ///
   /// Optionally, [seed] can be provided to initialize the internal state of the
   /// random generator.
-  void allocateWeeks({
+  List<(DateTime, String, String)> allocateWeeks({
     required DateTime from,
     int weeksPerPerson = 1,
     List<String> labels = const [''],
@@ -26,7 +26,7 @@ extension DateDistribution on Set<String> {
     final random = Random(seed * 1000 + from.year);
     final sortedPeople = toList()..shuffle(random);
 
-    [
+    return [
       for (var i = 0; i < labels.length; i++)
         ..._allocateWeeks(
           people: sortedPeople,
@@ -35,7 +35,7 @@ extension DateDistribution on Set<String> {
           indexShift: length ~/ (i + 1),
           label: labels[i],
         ).recordEntries,
-    ].writeCSV(fileName: 'schedule.csv');
+    ];
   }
 
   Map<DateTime, ({String label, String person})> _allocateWeeks({
@@ -87,7 +87,8 @@ extension on Map<DateTime, ({String label, String person})> {
   }
 }
 
-extension on List<(DateTime, String, String)> {
+/// An allocations extension.
+extension Allocations on List<(DateTime, String, String)> {
   /// Writes this [Map] in a CSV file with [fileName].
   void writeCSV({required String fileName}) {
     final content = StringBuffer()
