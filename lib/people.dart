@@ -7,8 +7,8 @@ import 'package:intl/intl.dart' show DateFormat;
 final _dM = DateFormat('d/M');
 
 /// A people extension.
-extension People on Set<String> {
-  /// Allocates each item in this [Set] in weeks starting [from] a date
+extension People on Iterable<String> {
+  /// Allocates each item in this collection in weeks starting [from] a date,
   /// given the number of [weeksPerPerson] and a list of [apartments].
   ///
   /// Optionally, [seed] can be provided to initialize the internal state of the
@@ -17,11 +17,12 @@ extension People on Set<String> {
     required DateTime from,
     int weeksPerPerson = 1,
     List<String> apartments = const [''],
-    int seed = 0,
+    int? seed,
   }) {
+    assert(isNotEmpty, 'This collection must contain at least one item');
     assert(apartments.isNotEmpty, 'Apartments must contain at least one item');
 
-    final random = Random(seed * 1000 + from.year);
+    final random = Random(seed ?? 0 * 1000 + from.year);
     final sortedPeople = toList()..shuffle(random);
 
     return [
