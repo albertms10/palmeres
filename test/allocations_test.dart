@@ -4,7 +4,27 @@ import 'package:test/test.dart';
 void main() {
   group('Allocations', () {
     group('.toTSV()', () {
-      test('converts this record list to TSV', () {
+      test('returns an empty table when this record list is empty', () {
+        expect(
+          const <(DateTime, String, String)>[].toTSV(),
+          'Date\tApartment\tPerson',
+        );
+      });
+
+      test('returns a TSV table with custom headers', () {
+        expect(
+          [
+            (DateTime(2024, 6, 3), '🌴', 'F'),
+            (DateTime(2024, 6, 10), '🌴', 'C'),
+          ].toTSV(headers: const ('Data', 'Apartament', 'Persona')),
+          '''
+Data\tApartament\tPersona
+2024-06-03\t🌴\tF
+2024-06-10\t🌴\tC''',
+        );
+      });
+
+      test('returns this record list formatted as TSV', () {
         final schedule = [
           (DateTime(2024, 6, 3), '🌴', 'F'),
           (DateTime(2024, 6, 10), '🌴', 'C'),
