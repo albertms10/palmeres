@@ -48,18 +48,19 @@ void main() {
       test('allocates people in four weeks each', () {
         final schedule = const {'A', 'B'}.allocateWeeks(
           from: DateTime(2024, 6, 3),
+          apartments: const ['⛺️'],
           weeksPerPerson: 4,
         );
 
         expect(schedule, [
-          (DateTime(2024, 6, 3), '', 'B'),
-          (DateTime(2024, 6, 10), '', 'A'),
-          (DateTime(2024, 6, 17), '', 'B'),
-          (DateTime(2024, 6, 24), '', 'A'),
-          (DateTime(2024, 7), '', 'B'),
-          (DateTime(2024, 7, 8), '', 'A'),
-          (DateTime(2024, 7, 15), '', 'B'),
-          (DateTime(2024, 7, 22), '', 'A'),
+          (DateTime(2024, 6, 3), '⛺️', 'B'),
+          (DateTime(2024, 6, 10), '⛺️', 'A'),
+          (DateTime(2024, 6, 17), '⛺️', 'B'),
+          (DateTime(2024, 6, 24), '⛺️', 'A'),
+          (DateTime(2024, 7), '⛺️', 'B'),
+          (DateTime(2024, 7, 8), '⛺️', 'A'),
+          (DateTime(2024, 7, 15), '⛺️', 'B'),
+          (DateTime(2024, 7, 22), '⛺️', 'A'),
         ]);
       });
 
@@ -129,7 +130,7 @@ void main() {
           (DateTime(2024, 6, 17), '⛺️', 'A'),
           (DateTime(2024, 6, 24), '⛺️', 'B'),
           (DateTime(2024, 7), '⛺️', 'C'),
-          (DateTime(2024, 7, 8), '⛺️', 'A')
+          (DateTime(2024, 7, 8), '⛺️', 'A'),
         ]);
       });
     });
