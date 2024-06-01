@@ -73,6 +73,16 @@ final parser = ArgParser()
 Future<void> main(List<String> arguments) async {
   final results = parser.parse(arguments);
   final seedArg = results.option(_seed);
+
+  final shuffle = results.flag(_shuffle);
+  if (!shuffle && seedArg != null) {
+    throw ArgumentError.value(
+      seedArg,
+      'seed',
+      'Use --shuffle to specify the seed',
+    );
+  }
+
   final schedule = results.multiOption(_person).toSet().allocateWeeks(
         from: DateTime.parse(results.option(_from)!),
         weeksPerPerson: int.parse(results.option(_weeksPerPerson)!),
