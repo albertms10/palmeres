@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io' show File;
 
 import 'package:args/args.dart' show ArgParser;
+import 'package:collection/collection.dart' show groupBy;
 import 'package:palmeres/allocations.dart';
 import 'package:palmeres/people.dart';
 
@@ -91,8 +94,14 @@ Future<void> main(List<String> arguments) async {
         seed: seedArg != null ? int.parse(seedArg) : null,
       );
 
+  groupBy(schedule, (item) => item.$1).prettyPrint();
+  groupBy(schedule, (item) => item.$3).prettyPrint();
+
   final table = schedule.toTSV(headers: const ('Data', 'Caseta', 'Germà'));
-  await File(results.option(_out)!).writeAsString(table);
+  final out = results.option(_out)!;
+  await File(out).writeAsString(table);
+
+  print("🖨️ The schedule has been successfully written to '$out'.");
 }
 
-// dart bin/palmeres.dart -f 2024-06-03 -w3 -a "🌴 Palmeres" -a "🏡 Caseta núm. 7" -p "Joan M." -p "M. Mercè" -p "Josep M." -p "M. Teresa" -p "Montse" -p "M. Lledó" --shuffle -s19
+// dart bin/palmeres.dart -f 2024-06-03 -w3 -a "🌴" -a "🏡" -p "Joan M." -p "M. Mercè" -p "Josep M." -p "M. Teresa" -p "Montse" -p "M. Lledó" --shuffle -s19
