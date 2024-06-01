@@ -59,7 +59,39 @@ extension People on Iterable<String> {
       runDate = runDate.add(_oneWeek);
     }
 
-    return schedule..prettyPrint();
+    return schedule;
+  }
+}
+
+/// A grouped schedule extension.
+extension GroupedByPersonSchedule
+    on Map<String, List<(DateTime, String, String)>> {
+  /// Prints a string representation of this collection.
+  void prettyPrint() {
+    print('=================');
+    for (final entry in entries) {
+      final formattedItem = (entry.value..sort((a, b) => a.$1.compareTo(b.$1)))
+          .map((item) => '${item.$2} ${_dM.format(item.$1)}')
+          .join(', ');
+      print('${entry.key}: $formattedItem');
+    }
+    print('=================\n');
+  }
+}
+
+/// A grouped schedule extension.
+extension GroupedByDateSchedule
+    on Map<DateTime, List<(DateTime, String, String)>> {
+  /// Prints a string representation of this collection.
+  void prettyPrint() {
+    print('=================');
+    for (final entry in entries) {
+      final formattedItem = (entry.value..sort((a, b) => a.$1.compareTo(b.$1)))
+          .map((item) => '${item.$2} ${item.$3}')
+          .join(', ');
+      print('${_dM.format(entry.key)}: $formattedItem');
+    }
+    print('=================\n');
   }
 }
 
@@ -68,13 +100,4 @@ extension on Map<DateTime, ({String apartment, String person})> {
         for (final entry in entries)
           (entry.key, entry.value.apartment, entry.value.person),
       ];
-
-  void prettyPrint() {
-    final apartment = entries.first.value.apartment;
-    print('== $apartment ===============');
-    for (final entry in entries) {
-      print('${_dM.format(entry.key)}: ${entry.value.person}');
-    }
-    print('== $apartment ===============');
-  }
 }
