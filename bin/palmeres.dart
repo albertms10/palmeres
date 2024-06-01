@@ -11,6 +11,7 @@ const _out = 'out';
 const _from = 'from';
 const _seed = 'seed';
 const _person = 'person';
+const _headers = 'headers';
 const _shuffle = 'shuffle';
 const _apartment = 'apartment';
 const _weeksPerPerson = 'weeks-per-person';
@@ -49,6 +50,11 @@ final parser = ArgParser()
     help: 'Specifies one or more apartments to be used in the schedule. '
         'Multiple apartments can be added by repeating this option '
         'or by providing a comma-separated list.',
+  )
+  ..addOption(
+    _headers,
+    valueHelp: 'Date,Apartment,Person',
+    help: 'Specifies the headers to be used in the output TSV file.',
   )
   ..addFlag(
     _shuffle,
@@ -97,11 +103,14 @@ Future<void> main(List<String> arguments) async {
   groupBy(schedule, (item) => item.$1).prettyPrint();
   groupBy(schedule, (item) => item.$3).prettyPrint();
 
-  final table = schedule.toTSV(headers: const ('Data', 'Caseta', 'Germà'));
+  final headers = results.option(_headers)?.split(RegExp('[,\t]( *)'));
+  final table = schedule.toTSV(
+    headers: headers != null ? (headers[0], headers[1], headers[2]) : null,
+  );
   final out = results.option(_out)!;
   await File(out).writeAsString(table);
 
   print("🖨️ The schedule has been successfully written to '$out'.");
 }
 
-// dart bin/palmeres.dart -f 2024-06-03 -w3 -a "🌴" -a "🏡" -p "Joan M." -p "M. Mercè" -p "Josep M." -p "M. Teresa" -p "Montse" -p "M. Lledó" --shuffle -s19
+// dart bin/palmeres.dart -f 2024-06-03 -w3 -a "🌴" -a "🏡" -p "Joan M." -p "M. Mercè" -p "Josep M." -p "M. Teresa" -p "Montse" -p "M. Lledó" --shuffle -s19 --headers "Data,Caseta,Germà"
