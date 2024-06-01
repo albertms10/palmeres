@@ -6,7 +6,7 @@ in `lib/`.
 ```sh
 dart bin/palmeres.dart \
   --from="2024-06-03" --weeks-per-person=2 --apartment="🌴" --apartment="🏡" \
-  -p John -p Lydia -p Peter
+  -p John -p Lydia -p Peter --shuffle
 ```
 
 Outputs:

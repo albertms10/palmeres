@@ -8,6 +8,7 @@ const _out = 'out';
 const _from = 'from';
 const _seed = 'seed';
 const _person = 'person';
+const _shuffle = 'shuffle';
 const _apartment = 'apartment';
 const _weeksPerPerson = 'weeks-per-person';
 
@@ -46,6 +47,12 @@ final parser = ArgParser()
         'Multiple apartments can be added by repeating this option '
         'or by providing a comma-separated list.',
   )
+  ..addFlag(
+    _shuffle,
+    help: 'Specifies whether the list of people should be randomly shuffled. '
+        "Use it in conjunction with the 'seed' option to modify its "
+        'generative internal state.',
+  )
   ..addOption(
     _seed,
     abbr: 's',
@@ -70,6 +77,7 @@ Future<void> main(List<String> arguments) async {
         from: DateTime.parse(results.option(_from)!),
         weeksPerPerson: int.parse(results.option(_weeksPerPerson)!),
         apartments: results.multiOption(_apartment),
+        shuffle: results.flag(_shuffle),
         seed: seedArg != null ? int.parse(seedArg) : null,
       );
 
@@ -77,4 +85,4 @@ Future<void> main(List<String> arguments) async {
   await File(results.option(_out)!).writeAsString(table);
 }
 
-// dart bin/palmeres.dart -f 2024-06-03 -w3 -a "🌴 Palmeres" -a "🏡 Caseta núm. 7" -p "Joan M." -p "M. Mercè" -p "Josep M." -p "M. Teresa" -p "Montse" -p "M. Lledó"
+// dart bin/palmeres.dart -f 2024-06-03 -w3 -a "🌴 Palmeres" -a "🏡 Caseta núm. 7" -p "Joan M." -p "M. Mercè" -p "Josep M." -p "M. Teresa" -p "Montse" -p "M. Lledó" --shuffle -s19

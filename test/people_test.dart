@@ -24,6 +24,20 @@ void main() {
         );
 
         expect(schedule, [
+          (DateTime(2024, 6, 3), '', 'A'),
+          (DateTime(2024, 6, 10), '', 'B'),
+          (DateTime(2024, 6, 17), '', 'C'),
+          (DateTime(2024, 6, 24), '', 'D'),
+        ]);
+      });
+
+      test('allocates four people randomly', () {
+        final schedule = const {'A', 'B', 'C', 'D'}.allocateWeeks(
+          from: DateTime(2024, 6, 3),
+          shuffle: true,
+        );
+
+        expect(schedule, [
           (DateTime(2024, 6, 3), '', 'D'),
           (DateTime(2024, 6, 10), '', 'C'),
           (DateTime(2024, 6, 17), '', 'B'),
@@ -31,9 +45,10 @@ void main() {
         ]);
       });
 
-      test('allocates four people with a different seed', () {
+      test('allocates four people randomly with a different seed', () {
         final schedule = const {'A', 'B', 'C', 'D'}.allocateWeeks(
           from: DateTime(2024, 6, 3),
+          shuffle: true,
           seed: 14,
         );
 
@@ -45,11 +60,12 @@ void main() {
         ]);
       });
 
-      test('allocates people in four weeks each', () {
+      test('allocates two people in four weeks each', () {
         final schedule = const {'A', 'B'}.allocateWeeks(
           from: DateTime(2024, 6, 3),
           apartments: const ['⛺️'],
           weeksPerPerson: 4,
+          shuffle: true,
         );
 
         expect(schedule, [
@@ -69,6 +85,7 @@ void main() {
           from: DateTime(2024, 6, 3),
           weeksPerPerson: 2,
           apartments: const ['🌴', '🏡'],
+          shuffle: true,
         );
 
         expect(schedule, [
@@ -104,6 +121,7 @@ void main() {
           from: DateTime(2024, 6, 3),
           weeksPerPerson: 2,
           apartments: const ['🌴', '🏡', '🏩', '⛺️'],
+          shuffle: true,
         );
 
         expect(schedule, [
