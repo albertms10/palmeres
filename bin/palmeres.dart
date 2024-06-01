@@ -53,7 +53,7 @@ final parser = ArgParser()
   )
   ..addOption(
     _headers,
-    valueHelp: 'headers',
+    valueHelp: 'Date,Apartment,Person',
     help: 'Specifies the headers to be used in the output TSV file.',
   )
   ..addFlag(
