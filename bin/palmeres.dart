@@ -87,7 +87,7 @@ Future<void> main(List<String> arguments) async {
         from: DateTime.parse(results.option(_from)!),
         weeksPerPerson: int.parse(results.option(_weeksPerPerson)!),
         apartments: results.multiOption(_apartment),
-        shuffle: results.flag(_shuffle),
+        shuffle: shuffle,
         seed: seedArg != null ? int.parse(seedArg) : null,
       );
 
