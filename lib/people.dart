@@ -7,6 +7,9 @@ import 'package:intl/intl.dart' show DateFormat;
 final _dM = DateFormat('d/M');
 const _oneWeek = Duration(days: 7);
 
+/// A row record representation.
+typedef RowTuple = (DateTime, String, String);
+
 /// A people extension.
 extension People on Iterable<String> {
   /// Allocates each person in this collection in weeks starting [from] a date,
@@ -39,7 +42,7 @@ extension People on Iterable<String> {
           weeksPerPerson: weeksPerPerson,
           indexShift: length ~/ (i + 1),
         ).recordEntries,
-    ];
+    ]..sort(_compareToFirst);
   }
 
   Map<DateTime, ({String apartment, String person})> _allocateWeeks({
@@ -64,13 +67,12 @@ extension People on Iterable<String> {
 }
 
 /// A grouped schedule extension.
-extension GroupedByPersonSchedule
-    on Map<String, List<(DateTime, String, String)>> {
+extension GroupedByPersonSchedule on Map<String, List<RowTuple>> {
   /// Prints a string representation of this collection.
   void prettyPrint() {
     print('=================');
     for (final entry in entries) {
-      final formattedItem = (entry.value..sort((a, b) => a.$1.compareTo(b.$1)))
+      final formattedItem = (entry.value..sort(_compareToFirst))
           .map((item) => '${item.$2} ${_dM.format(item.$1)}')
           .join(', ');
       print('${entry.key}: $formattedItem');
@@ -80,13 +82,12 @@ extension GroupedByPersonSchedule
 }
 
 /// A grouped schedule extension.
-extension GroupedByDateSchedule
-    on Map<DateTime, List<(DateTime, String, String)>> {
+extension GroupedByDateSchedule on Map<DateTime, List<RowTuple>> {
   /// Prints a string representation of this collection.
   void prettyPrint() {
     print('=================');
     for (final entry in entries) {
-      final formattedItem = (entry.value..sort((a, b) => a.$1.compareTo(b.$1)))
+      final formattedItem = (entry.value..sort(_compareToFirst))
           .map((item) => '${item.$2} ${item.$3}')
           .join(', ');
       print('${_dM.format(entry.key)}: $formattedItem');
@@ -96,8 +97,14 @@ extension GroupedByDateSchedule
 }
 
 extension on Map<DateTime, ({String apartment, String person})> {
-  List<(DateTime, String, String)> get recordEntries => [
+  List<RowTuple> get recordEntries => [
         for (final entry in entries)
           (entry.key, entry.value.apartment, entry.value.person),
       ];
 }
+
+int Function(RowTuple, RowTuple) get _compareToFirst => (a, b) {
+      final compareFirst = a.$1.compareTo(b.$1);
+      if (compareFirst != 0) return compareFirst;
+      return a.$2.compareTo(b.$2);
+    };

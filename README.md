@@ -28,20 +28,20 @@ John: 🏡 10/6, 🌴 17/6, 🏡 1/7, 🌴 8/7
 =================
 ```
 
-And writes into `out/schedule.tsv`:
+And writes into `out/schedule.tsv` (by default):
 
 ```tsv
 Date	Apartment	Person
 2024-06-03	🌴	Lydia
-2024-06-10	🌴	Peter
-2024-06-17	🌴	John
-2024-06-24	🌴	Lydia
-2024-07-01	🌴	Peter
-2024-07-08	🌴	John
 2024-06-03	🏡	Peter
+2024-06-10	🌴	Peter
 2024-06-10	🏡	John
+2024-06-17	🌴	John
 2024-06-17	🏡	Lydia
+2024-06-24	🌴	Lydia
 2024-06-24	🏡	Peter
+2024-07-01	🌴	Peter
 2024-07-01	🏡	John
+2024-07-08	🌴	John
 2024-07-08	🏡	Lydia
 ```
