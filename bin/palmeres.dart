@@ -59,7 +59,7 @@ final parser = ArgParser()
   ..addFlag(
     _shuffle,
     help: 'Specifies whether the list of people should be randomly shuffled. '
-        "Use it in conjunction with the 'seed' option to modify its "
+        'Use it in conjunction with the --seed option to modify its '
         'generative internal state.',
   )
   ..addOption(
@@ -67,8 +67,8 @@ final parser = ArgParser()
     abbr: 's',
     valueHelp: 'number',
     help: 'Specifies the seed for randomization to ensure reproducibility. '
-        'The value should be an integer. '
-        'If not provided, a default seed will be used.',
+        'The --shuffle flag must be enabled and the value should be '
+        'an integer. If not provided, a default seed will be used.',
   )
   ..addOption(
     _out,
@@ -88,7 +88,7 @@ Future<void> main(List<String> arguments) async {
     throw ArgumentError.value(
       seedArg,
       'seed',
-      'Use --shuffle to specify the seed',
+      'The --shuffle flag must be enabled to use the option',
     );
   }
 
