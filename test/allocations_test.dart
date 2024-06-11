@@ -1,21 +1,19 @@
 import 'package:palmeres/allocations.dart';
+import 'package:palmeres/people.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Allocations', () {
     group('.toTSV()', () {
       test('returns an empty table when this record list is empty', () {
-        expect(
-          const <(DateTime, String, String)>[].toTSV(),
-          'Date\tApartment\tPerson',
-        );
+        expect(const <RowTuple>[].toTSV(), 'Date\tApartment\tPerson');
       });
 
       test('returns a TSV table with custom headers', () {
         expect(
           [
-            (DateTime(2024, 6, 3), '🌴', 'F'),
-            (DateTime(2024, 6, 10), '🌴', 'C'),
+            (DateTime(2024, 6, 3), const Apartment('🌴'), const Person('F')),
+            (DateTime(2024, 6, 10), const Apartment('🌴'), const Person('C')),
           ].toTSV(headers: const ('Data', 'Apartament', 'Persona')),
           '''
 Data\tApartament\tPersona
@@ -26,30 +24,30 @@ Data\tApartament\tPersona
 
       test('returns this record list formatted as TSV', () {
         final schedule = [
-          (DateTime(2024, 6, 3), '🌴', 'F'),
-          (DateTime(2024, 6, 10), '🌴', 'C'),
-          (DateTime(2024, 6, 17), '🌴', 'B'),
-          (DateTime(2024, 6, 24), '🌴', 'E'),
-          (DateTime(2024, 7), '🌴', 'D'),
-          (DateTime(2024, 7, 8), '🌴', 'A'),
-          (DateTime(2024, 7, 15), '🌴', 'F'),
-          (DateTime(2024, 7, 22), '🌴', 'C'),
-          (DateTime(2024, 7, 29), '🌴', 'B'),
-          (DateTime(2024, 8, 5), '🌴', 'E'),
-          (DateTime(2024, 8, 12), '🌴', 'D'),
-          (DateTime(2024, 8, 19), '🌴', 'A'),
-          (DateTime(2024, 6, 3), '🏡', 'E'),
-          (DateTime(2024, 6, 10), '🏡', 'D'),
-          (DateTime(2024, 6, 17), '🏡', 'A'),
-          (DateTime(2024, 6, 24), '🏡', 'F'),
-          (DateTime(2024, 7), '🏡', 'C'),
-          (DateTime(2024, 7, 8), '🏡', 'B'),
-          (DateTime(2024, 7, 15), '🏡', 'E'),
-          (DateTime(2024, 7, 22), '🏡', 'D'),
-          (DateTime(2024, 7, 29), '🏡', 'A'),
-          (DateTime(2024, 8, 5), '🏡', 'F'),
-          (DateTime(2024, 8, 12), '🏡', 'C'),
-          (DateTime(2024, 8, 19), '🏡', 'B'),
+          (DateTime(2024, 6, 3), const Apartment('🌴'), const Person('F')),
+          (DateTime(2024, 6, 10), const Apartment('🌴'), const Person('C')),
+          (DateTime(2024, 6, 17), const Apartment('🌴'), const Person('B')),
+          (DateTime(2024, 6, 24), const Apartment('🌴'), const Person('E')),
+          (DateTime(2024, 7), const Apartment('🌴'), const Person('D')),
+          (DateTime(2024, 7, 8), const Apartment('🌴'), const Person('A')),
+          (DateTime(2024, 7, 15), const Apartment('🌴'), const Person('F')),
+          (DateTime(2024, 7, 22), const Apartment('🌴'), const Person('C')),
+          (DateTime(2024, 7, 29), const Apartment('🌴'), const Person('B')),
+          (DateTime(2024, 8, 5), const Apartment('🌴'), const Person('E')),
+          (DateTime(2024, 8, 12), const Apartment('🌴'), const Person('D')),
+          (DateTime(2024, 8, 19), const Apartment('🌴'), const Person('A')),
+          (DateTime(2024, 6, 3), const Apartment('🏡'), const Person('E')),
+          (DateTime(2024, 6, 10), const Apartment('🏡'), const Person('D')),
+          (DateTime(2024, 6, 17), const Apartment('🏡'), const Person('A')),
+          (DateTime(2024, 6, 24), const Apartment('🏡'), const Person('F')),
+          (DateTime(2024, 7), const Apartment('🏡'), const Person('C')),
+          (DateTime(2024, 7, 8), const Apartment('🏡'), const Person('B')),
+          (DateTime(2024, 7, 15), const Apartment('🏡'), const Person('E')),
+          (DateTime(2024, 7, 22), const Apartment('🏡'), const Person('D')),
+          (DateTime(2024, 7, 29), const Apartment('🏡'), const Person('A')),
+          (DateTime(2024, 8, 5), const Apartment('🏡'), const Person('F')),
+          (DateTime(2024, 8, 12), const Apartment('🏡'), const Person('C')),
+          (DateTime(2024, 8, 19), const Apartment('🏡'), const Person('B')),
         ];
 
         expect(schedule.toTSV(), '''

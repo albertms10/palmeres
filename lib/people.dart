@@ -20,7 +20,7 @@ extension People on Iterable<Person> {
   List<RowTuple> allocateWeeks({
     required DateTime from,
     int weeksPerPerson = 1,
-    List<Apartment> apartments = const [],
+    List<Apartment> apartments = const [Apartment('')],
     bool shuffle = false,
     int? seed,
   }) {
@@ -110,7 +110,7 @@ Comparator<RowTuple> get _compareToFirst => (a, b) {
     };
 
 /// A person representation.
-extension type Person(String name) implements String {}
+extension type const Person(String name) implements String {}
 
 /// An apartment representation.
-extension type Apartment(String name) implements String {}
+extension type const Apartment(String name) implements String {}
