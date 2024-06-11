@@ -1,21 +1,19 @@
 import 'package:palmeres/allocations.dart';
+import 'package:palmeres/people.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Allocations', () {
     group('.toTSV()', () {
       test('returns an empty table when this record list is empty', () {
-        expect(
-          const <(DateTime, String, String)>[].toTSV(),
-          'Date\tApartment\tPerson',
-        );
+        expect(const <RowTuple>[].toTSV(), 'Date\tApartment\tPerson');
       });
 
       test('returns a TSV table with custom headers', () {
         expect(
           [
-            (DateTime(2024, 6, 3), '🌴', 'F'),
-            (DateTime(2024, 6, 10), '🌴', 'C'),
+            (DateTime(2024, 6, 3), const Apartment('🌴'), const Person('F')),
+            (DateTime(2024, 6, 10), const Apartment('🌴'), const Person('C')),
           ].toTSV(headers: const ('Data', 'Apartament', 'Persona')),
           '''
 Data\tApartament\tPersona
@@ -50,7 +48,7 @@ Data\tApartament\tPersona
           (DateTime(2024, 8, 5), '🏡', 'F'),
           (DateTime(2024, 8, 12), '🏡', 'C'),
           (DateTime(2024, 8, 19), '🏡', 'B'),
-        ];
+        ] as List<RowTuple>;
 
         expect(schedule.toTSV(), '''
 Date\tApartment\tPerson
