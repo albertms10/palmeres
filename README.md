@@ -12,20 +12,25 @@ dart bin/palmeres.dart \
 Outputs to the console:
 
 ```
-=================
+== By date =======
 3/6: 🌴 Lydia, 🏡 Peter
 10/6: 🌴 Peter, 🏡 John
 17/6: 🌴 John, 🏡 Lydia
 24/6: 🌴 Lydia, 🏡 Peter
 1/7: 🌴 Peter, 🏡 John
 8/7: 🌴 John, 🏡 Lydia
-=================
+==================
 
-=================
+== By apartment ==
+🌴: Lydia 3/6, Peter 10/6, John 17/6, Lydia 24/6, Peter 1/7, John 8/7
+🏡: Peter 3/6, John 10/6, Lydia 17/6, Peter 24/6, John 1/7, Lydia 8/7
+==================
+
+== By person =====
 Lydia: 🌴 3/6, 🏡 17/6, 🌴 24/6, 🏡 8/7
 Peter: 🏡 3/6, 🌴 10/6, 🏡 24/6, 🌴 1/7
 John: 🏡 10/6, 🌴 17/6, 🏡 1/7, 🌴 8/7
-=================
+==================
 ```
 
 And writes into `out/schedule.tsv` (by default):

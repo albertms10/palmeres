@@ -104,6 +104,7 @@ Future<void> main(List<String> arguments) async {
   );
 
   groupBy(schedule, (item) => item.$1).prettyPrint();
+  groupBy(schedule, (item) => item.$2).prettyPrint();
   groupBy(schedule, (item) => item.$3).prettyPrint();
 
   final headers = results.option(_headers)?.split(_headersSplitRegExp);
