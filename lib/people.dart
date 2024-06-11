@@ -81,6 +81,21 @@ extension GroupedByPersonSchedule on Map<Person, List<RowTuple>> {
   }
 }
 
+/// A grouped by apartment schedule extension.
+extension GroupedByApartmentSchedule on Map<Apartment, List<RowTuple>> {
+  /// Prints a string representation of this collection.
+  void prettyPrint() {
+    print('== By apartment ==');
+    for (final entry in entries) {
+      final formattedItem = (entry.value..sort(_compareToFirst))
+          .map((item) => '${item.$3} ${_dM.format(item.$1)}')
+          .join(', ');
+      print('${entry.key}: $formattedItem');
+    }
+    print('==================\n');
+  }
+}
+
 /// A grouped by date schedule extension.
 extension GroupedByDateSchedule on Map<DateTime, List<RowTuple>> {
   /// Prints a string representation of this collection.
