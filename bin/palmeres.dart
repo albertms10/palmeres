@@ -16,7 +16,9 @@ const _shuffle = 'shuffle';
 const _apartment = 'apartment';
 const _weeksPerPerson = 'weeks-per-person';
 
-const outDefault = 'out/schedule.tsv';
+const _outDefault = 'out/schedule.tsv';
+
+final _headersSplitRegExp = RegExp('[,\t]( *)');
 
 final parser = ArgParser()
   ..addOption(
@@ -73,10 +75,10 @@ final parser = ArgParser()
   ..addOption(
     _out,
     abbr: 'o',
-    defaultsTo: outDefault,
+    defaultsTo: _outDefault,
     valueHelp: 'path',
     help: 'Specifies the output file path for the generated schedule. '
-        "If not provided, the default path '$outDefault' will be used.",
+        "If not provided, the default path '$_outDefault' will be used.",
   );
 
 Future<void> main(List<String> arguments) async {
@@ -92,18 +94,19 @@ Future<void> main(List<String> arguments) async {
     );
   }
 
-  final schedule = results.multiOption(_person).toSet().allocateWeeks(
-        from: DateTime.parse(results.option(_from)!),
-        weeksPerPerson: int.parse(results.option(_weeksPerPerson)!),
-        apartments: results.multiOption(_apartment),
-        shuffle: shuffle,
-        seed: seedArg != null ? int.parse(seedArg) : null,
-      );
+  final people = (results.multiOption(_person) as List<Person>).toSet();
+  final schedule = people.allocateWeeks(
+    from: DateTime.parse(results.option(_from)!),
+    weeksPerPerson: int.parse(results.option(_weeksPerPerson)!),
+    apartments: results.multiOption(_apartment) as List<Apartment>,
+    shuffle: shuffle,
+    seed: seedArg != null ? int.parse(seedArg) : null,
+  );
 
   groupBy(schedule, (item) => item.$1).prettyPrint();
   groupBy(schedule, (item) => item.$3).prettyPrint();
 
-  final headers = results.option(_headers)?.split(RegExp('[,\t]( *)'));
+  final headers = results.option(_headers)?.split(_headersSplitRegExp);
   final table = schedule.toTSV(
     headers: headers != null ? (headers[0], headers[1], headers[2]) : null,
   );

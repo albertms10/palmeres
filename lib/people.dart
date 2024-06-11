@@ -8,19 +8,19 @@ final _dM = DateFormat('d/M');
 const _oneWeek = Duration(days: 7);
 
 /// A row record representation.
-typedef RowTuple = (DateTime, String, String);
+typedef RowTuple = (DateTime date, Apartment apartment, Person person);
 
 /// A people extension.
-extension People on Iterable<String> {
+extension People on Iterable<Person> {
   /// Allocates each person in this collection in weeks starting [from] a date,
   /// given the number of [weeksPerPerson] and a list of [apartments].
   ///
   /// Use [shuffle] to randomize the people collection. Optionally, [seed]
   /// can be provided to initialize the internal state of the random generator.
-  List<(DateTime date, String apartment, String person)> allocateWeeks({
+  List<RowTuple> allocateWeeks({
     required DateTime from,
     int weeksPerPerson = 1,
-    List<String> apartments = const [''],
+    List<Apartment> apartments = const [],
     bool shuffle = false,
     int? seed,
   }) {
@@ -45,19 +45,19 @@ extension People on Iterable<String> {
     ]..sort(_compareToFirst);
   }
 
-  Map<DateTime, ({String apartment, String person})> _allocateWeeks({
-    required List<String> people,
+  static Map<DateTime, ({Apartment apartment, Person person})> _allocateWeeks({
+    required List<Person> people,
     required DateTime from,
-    required String apartment,
+    required Apartment apartment,
     int weeksPerPerson = 1,
     int indexShift = 0,
   }) {
-    final totalWeeks = weeksPerPerson * length;
-    final schedule = <DateTime, ({String apartment, String person})>{};
+    final totalWeeks = weeksPerPerson * people.length;
+    final schedule = <DateTime, ({Apartment apartment, Person person})>{};
 
     var runDate = from;
     for (var i = 0; i < totalWeeks; i++) {
-      final person = people[(i + indexShift) % length];
+      final person = people[(i + indexShift) % people.length];
       schedule[runDate] = (apartment: apartment, person: person);
       runDate = runDate.add(_oneWeek);
     }
@@ -66,45 +66,51 @@ extension People on Iterable<String> {
   }
 }
 
-/// A grouped schedule extension.
-extension GroupedByPersonSchedule on Map<String, List<RowTuple>> {
+/// A grouped by person schedule extension.
+extension GroupedByPersonSchedule on Map<Person, List<RowTuple>> {
   /// Prints a string representation of this collection.
   void prettyPrint() {
-    print('=================');
+    print('== By person =====');
     for (final entry in entries) {
       final formattedItem = (entry.value..sort(_compareToFirst))
           .map((item) => '${item.$2} ${_dM.format(item.$1)}')
           .join(', ');
       print('${entry.key}: $formattedItem');
     }
-    print('=================\n');
+    print('==================\n');
   }
 }
 
-/// A grouped schedule extension.
+/// A grouped by date schedule extension.
 extension GroupedByDateSchedule on Map<DateTime, List<RowTuple>> {
   /// Prints a string representation of this collection.
   void prettyPrint() {
-    print('=================');
+    print('== By date =======');
     for (final entry in entries) {
       final formattedItem = (entry.value..sort(_compareToFirst))
           .map((item) => '${item.$2} ${item.$3}')
           .join(', ');
       print('${_dM.format(entry.key)}: $formattedItem');
     }
-    print('=================\n');
+    print('==================\n');
   }
 }
 
-extension on Map<DateTime, ({String apartment, String person})> {
+extension on Map<DateTime, ({Apartment apartment, Person person})> {
   List<RowTuple> get recordEntries => [
         for (final entry in entries)
           (entry.key, entry.value.apartment, entry.value.person),
       ];
 }
 
-int Function(RowTuple, RowTuple) get _compareToFirst => (a, b) {
+Comparator<RowTuple> get _compareToFirst => (a, b) {
       final compareFirst = a.$1.compareTo(b.$1);
       if (compareFirst != 0) return compareFirst;
       return a.$2.compareTo(b.$2);
     };
+
+/// A person representation.
+extension type Person(String name) implements String {}
+
+/// An apartment representation.
+extension type Apartment(String name) implements String {}
