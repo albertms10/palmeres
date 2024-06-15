@@ -11,6 +11,8 @@ const _out = 'out';
 const _from = 'from';
 const _seed = 'seed';
 const _person = 'person';
+const _dryRun = 'dry-run';
+const _verbose = 'verbose';
 const _headers = 'headers';
 const _shuffle = 'shuffle';
 const _apartment = 'apartment';
@@ -79,6 +81,16 @@ final parser = ArgParser()
     valueHelp: 'path',
     help: 'Specifies the output file path for the generated schedule. '
         "If not provided, the default path '$_outDefault' will be used.",
+  )
+  ..addFlag(
+    _verbose,
+    abbr: 'v',
+    help: 'Specifies whether to run the process in verbose mode.',
+  )
+  ..addFlag(
+    _dryRun,
+    abbr: 'd',
+    help: 'Specifies whether to run the process in dry-run mode.',
   );
 
 Future<void> main(List<String> arguments) async {
@@ -94,7 +106,17 @@ Future<void> main(List<String> arguments) async {
     );
   }
 
+  final isVerbose = results.flag(_verbose);
+  final isDryRun = results.flag(_dryRun);
+
   final people = (results.multiOption(_person) as List<Person>).toSet();
+  final apartments = results.multiOption(_apartment) as List<Apartment>;
+  if (isVerbose) {
+    print(
+      '🛖 Allocating ${people.textualCount} in ${apartments.textualCount}.',
+    );
+  }
+
   final schedule = people.allocateApartments(
     from: DateTime.parse(results.option(_from)!),
     weeksPerPerson: int.parse(results.option(_weeksPerPerson)!),
@@ -103,9 +125,11 @@ Future<void> main(List<String> arguments) async {
     seed: seedArg != null ? int.parse(seedArg) : null,
   );
 
-  groupBy(schedule, (item) => item.$1).prettyPrint();
-  groupBy(schedule, (item) => item.$2).prettyPrint();
-  groupBy(schedule, (item) => item.$3).prettyPrint();
+  if (isVerbose) {
+    groupBy(schedule, (item) => item.$1).prettyPrint();
+    groupBy(schedule, (item) => item.$2).prettyPrint();
+    groupBy(schedule, (item) => item.$3).prettyPrint();
+  }
 
   final headersList = results.option(_headers)?.split(_headersSplitRegExp);
   final headers = headersList != null
@@ -114,9 +138,23 @@ Future<void> main(List<String> arguments) async {
 
   final table = schedule.toTSV(headers: headers);
   final out = results.option(_out)!;
-  await File(out).writeAsString(table);
 
-  print("🖨️ The schedule has been successfully written to '$out'.");
+  if (isDryRun) {
+    print(table);
+    print("🖨️ The schedule would have been written to '$out'.");
+  } else {
+    await File(out).writeAsString(table);
+    print("🖨️ The schedule has been successfully written to '$out'.");
+  }
 }
 
 // dart bin/palmeres.dart -f 2024-06-03 -w3 -a "🌴" -a "🏡" -p "Joan M." -p "M. Mercè" -p "Josep M." -p "M. Teresa" -p "Montse" -p "M. Lledó" --shuffle -s19 --headers "Data,Caseta,Germà"
+
+extension on Iterable<Person> {
+  String get textualCount => '$length ${length == 1 ? 'person' : 'people'}';
+}
+
+extension on Iterable<Apartment> {
+  String get textualCount =>
+      '$length ${length == 1 ? 'apartment' : 'apartments'}';
+}
