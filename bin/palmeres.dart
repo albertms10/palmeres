@@ -95,7 +95,7 @@ Future<void> main(List<String> arguments) async {
   }
 
   final people = (results.multiOption(_person) as List<Person>).toSet();
-  final schedule = people.allocateWeeks(
+  final schedule = people.allocateApartments(
     from: DateTime.parse(results.option(_from)!),
     weeksPerPerson: int.parse(results.option(_weeksPerPerson)!),
     apartments: results.multiOption(_apartment) as List<Apartment>,
@@ -107,10 +107,12 @@ Future<void> main(List<String> arguments) async {
   groupBy(schedule, (item) => item.$2).prettyPrint();
   groupBy(schedule, (item) => item.$3).prettyPrint();
 
-  final headers = results.option(_headers)?.split(_headersSplitRegExp);
-  final table = schedule.toTSV(
-    headers: headers != null ? (headers[0], headers[1], headers[2]) : null,
-  );
+  final headersList = results.option(_headers)?.split(_headersSplitRegExp);
+  final headers = headersList != null
+      ? (headersList[0], headersList[1], headersList[2])
+      : null;
+
+  final table = schedule.toTSV(headers: headers);
   final out = results.option(_out)!;
   await File(out).writeAsString(table);
 

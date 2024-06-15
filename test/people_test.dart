@@ -3,14 +3,14 @@ import 'package:test/test.dart';
 
 void main() {
   group('People', () {
-    group('.allocateWeeks()', () {
+    group('.allocateApartments()', () {
       test('asserts collections are not empty', () {
         expect(
-          () => const <Person>{}.allocateWeeks(from: DateTime.now()),
+          () => const <Person>{}.allocateApartments(from: DateTime.now()),
           throwsA(isA<AssertionError>()),
         );
         expect(
-          () => const {Person('A'), Person('B')}.allocateWeeks(
+          () => const {Person('A'), Person('B')}.allocateApartments(
             from: DateTime.now(),
             apartments: const <Apartment>[],
           ),
@@ -20,7 +20,7 @@ void main() {
 
       test('allocates four people with default values', () {
         const people = {'A', 'B', 'C', 'D'} as Set<Person>;
-        final schedule = people.allocateWeeks(from: DateTime(2024, 6, 3));
+        final schedule = people.allocateApartments(from: DateTime(2024, 6, 3));
 
         expect(schedule, [
           (DateTime(2024, 6, 3), '', 'A'),
@@ -32,7 +32,7 @@ void main() {
 
       test('allocates four people randomly', () {
         const people = {'A', 'B', 'C', 'D'} as Set<Person>;
-        final schedule = people.allocateWeeks(
+        final schedule = people.allocateApartments(
           from: DateTime(2024, 6, 3),
           shuffle: true,
         );
@@ -47,7 +47,7 @@ void main() {
 
       test('allocates four people randomly with a different seed', () {
         const people = {'A', 'B', 'C', 'D'} as Set<Person>;
-        final schedule = people.allocateWeeks(
+        final schedule = people.allocateApartments(
           from: DateTime(2024, 6, 3),
           shuffle: true,
           seed: 14,
@@ -63,7 +63,7 @@ void main() {
 
       test('allocates two people in four weeks each', () {
         const people = {'A', 'B'} as Set<Person>;
-        final schedule = people.allocateWeeks(
+        final schedule = people.allocateApartments(
           from: DateTime(2024, 6, 3),
           apartments: const ['⛺️'] as List<Apartment>,
           weeksPerPerson: 4,
@@ -84,7 +84,7 @@ void main() {
 
       test('allocates six people in two apartments', () {
         const people = {'A', 'B', 'C', 'D', 'E', 'F'} as Set<Person>;
-        final schedule = people.allocateWeeks(
+        final schedule = people.allocateApartments(
           from: DateTime(2024, 6, 3),
           weeksPerPerson: 2,
           apartments: const ['🌴', '🏡'] as List<Apartment>,
@@ -121,7 +121,7 @@ void main() {
 
       test('allocates three people in four apartments', () {
         const people = {'A', 'B', 'C'} as Set<Person>;
-        final schedule = people.allocateWeeks(
+        final schedule = people.allocateApartments(
           from: DateTime(2024, 6, 3),
           weeksPerPerson: 2,
           apartments: const ['🌴', '🏡', '🏩', '⛺️'] as List<Apartment>,
