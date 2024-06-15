@@ -57,6 +57,7 @@ final parser = ArgParser()
   )
   ..addOption(
     _headers,
+    abbr: 'h',
     valueHelp: 'Date,Apartment,Person',
     help: 'Specifies the headers to be used in the output TSV file.',
   )
@@ -85,12 +86,14 @@ final parser = ArgParser()
   ..addFlag(
     _verbose,
     abbr: 'v',
-    help: 'Specifies whether to run the process in verbose mode.',
+    help: 'Specifies whether to run the process in verbose mode '
+        'to log helpful details of the suggested schedule',
   )
   ..addFlag(
     _dryRun,
     abbr: 'd',
-    help: 'Specifies whether to run the process in dry-run mode.',
+    help: 'Specifies whether to run the process in dry-run mode '
+        'to preview the suggested schedule without writing the file.',
   );
 
 Future<void> main(List<String> arguments) async {
@@ -126,6 +129,7 @@ Future<void> main(List<String> arguments) async {
   );
 
   if (isVerbose) {
+    print('\n');
     groupBy(schedule, (item) => item.$1).prettyPrint();
     groupBy(schedule, (item) => item.$2).prettyPrint();
     groupBy(schedule, (item) => item.$3).prettyPrint();
